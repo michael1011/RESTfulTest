@@ -3,6 +3,8 @@
 *.a
 *.so
 
+RESTfulTest
+
 # Folders
 _obj
 _test
