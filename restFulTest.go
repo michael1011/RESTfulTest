@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 var fatal string = "Error: "
@@ -28,6 +29,8 @@ func main() {
 
 		case "get":
 			if argsLen > 1 {
+				startTime := time.Now()
+
 				response, err := getRequest(args[1])
 
 				if err == nil {
@@ -40,6 +43,7 @@ func main() {
 					}
 
 					fmt.Println("Status: " + response.Status)
+					fmt.Println("Time: ", time.Since(startTime))
 					fmt.Println()
 
 					readResp := string(rawResp)
