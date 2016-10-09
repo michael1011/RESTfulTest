@@ -23,20 +23,32 @@ func main() {
 				if err == nil {
 					defer response.Body.Close()
 
-					readResp, readErr := ioutil.ReadAll(response.Body)
+					rawResp, readErr := ioutil.ReadAll(response.Body)
 
 					if readErr != nil {
-						fmt.Print(fatal)
-						fmt.Println(readErr)
+						sendError(readErr)
 					}
 
 					fmt.Println("Status: "+response.Status)
 					fmt.Println()
-					fmt.Println(string(readResp))
+
+					readResp := string(rawResp)
+
+					if isJson(readResp) {
+						jsonRead, jsonErr := prettyJson(readResp)
+
+						if jsonErr == nil {
+							fmt.Println(jsonRead)
+						} else {
+							sendError(jsonErr)
+						}
+
+					} else {
+						fmt.Println(readResp)
+					}
 
 				} else {
-					fmt.Print(fatal)
-					fmt.Println(err)
+					sendError(err)
 				}
 
 			} else {
@@ -51,6 +63,11 @@ func main() {
 		sendHelp()
 	}
 
+}
+
+func sendError(error error) {
+	fmt.Print(fatal)
+	fmt.Println(error)
 }
 
 func sendHelp() {
