@@ -8,13 +8,29 @@ import (
 )
 
 func getRequest(url string) (*http.Response, error) {
+	request, err := http.Get(completeUrl(url))
+
+	return request, err
+}
+
+func postRequest(url string, body string, headers map[string]string) (*http.Response, error) {
+	request, _ := http.NewRequest("POST", completeUrl(url), bytes.NewBuffer([]byte(body)))
+
+	for key, value := range headers {
+		request.Header.Add(key, value)
+	}
+
+	response, err := http.DefaultClient.Do(request)
+
+	return response, err
+}
+
+func completeUrl(url string) string {
 	if !strings.HasPrefix(url, "http") {
 		url = "http://" + url
 	}
 
-	response, err := http.Get(url)
-
-	return response, err
+	return url
 }
 
 func isJson(input string) bool {

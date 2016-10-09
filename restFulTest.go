@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/yosssi/gohtml"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -13,6 +14,7 @@ import (
 var fatal string = "Error: "
 
 // todo: add gui
+// todo: option to save response in file
 
 func main() {
 	args := os.Args[1:]
@@ -25,54 +27,47 @@ func main() {
 		}
 
 		switch strings.ToLower(args[0]) {
-		// fixme: add post request
-
 		case "get":
 			if argsLen > 1 {
 				startTime := time.Now()
 
 				response, err := getRequest(args[1])
 
-				if err == nil {
-					defer response.Body.Close()
+				sendResponse(response, err, startTime)
 
-					rawResp, readErr := ioutil.ReadAll(response.Body)
+			} else {
+				sendHelp()
+			}
 
-					if readErr != nil {
-						sendError(readErr)
-					}
+		case "post":
+			if argsLen > 2 {
+				startTime := time.Now()
 
-					fmt.Println("Status: " + response.Status)
-					fmt.Println("Time: ", time.Since(startTime))
-					fmt.Println()
+				body := ""
+				headers := make(map[string]string)
 
-					readResp := string(rawResp)
+				for _, value := range args[2:] {
+					switch {
+					case strings.HasPrefix(value, "body="):
+						body = body + value[5:]
 
-					beautify := flag.Bool("beautify", true, "disable beautifying")
+					case strings.HasPrefix(value, "header="):
+						for _, value = range strings.Split(value[5:], ";") {
+							entry := strings.Split(value, ":")
 
-					flag.Parse()
-
-					if *beautify {
-						if isJson(readResp) {
-							jsonRead, jsonErr := prettyJson(readResp)
-
-							if jsonErr == nil {
-								fmt.Println(jsonRead)
-							} else {
-								sendError(jsonErr)
-							}
-
-						} else {
-							fmt.Println(gohtml.Format(readResp))
+							headers[entry[0]] = entry[1]
 						}
 
-					} else {
-						fmt.Println(readResp)
+					default:
+						fmt.Println(fatal+"Unknown argument: " + value)
+						os.Exit(1)
 					}
 
-				} else {
-					sendError(err)
 				}
+
+				response, err := postRequest(args[1], body, headers)
+
+				sendResponse(response, err, startTime)
 
 			} else {
 				sendHelp()
@@ -89,6 +84,50 @@ func main() {
 		sendHelp()
 	}
 
+}
+
+func sendResponse(response *http.Response, err error, startTime time.Time) {
+	if err == nil {
+		defer response.Body.Close()
+
+		rawResp, readErr := ioutil.ReadAll(response.Body)
+
+		if readErr != nil {
+			sendError(readErr)
+		}
+
+		fmt.Println("Status: " + response.Status)
+		fmt.Println("Time: ", time.Since(startTime))
+		fmt.Println("Headers: ", response.Header)
+		fmt.Println()
+
+		readResp := string(rawResp)
+
+		beautify := flag.Bool("beautify", true, "disable beautifying")
+
+		flag.Parse()
+
+		if *beautify {
+			if isJson(readResp) {
+				jsonRead, jsonErr := prettyJson(readResp)
+
+				if jsonErr == nil {
+					fmt.Println(jsonRead)
+				} else {
+					sendError(jsonErr)
+				}
+
+			} else {
+				fmt.Println(gohtml.Format(readResp))
+			}
+
+		} else {
+			fmt.Println(readResp)
+		}
+
+	} else {
+		sendError(err)
+	}
 }
 
 func sendError(error error) {
