@@ -17,6 +17,8 @@ func sendInstructions() {
 	fmt.Println("	post <url> body=\"...\" header=\"key:value;key:value;...\"")
 	fmt.Println("					send a post request to <url>")
 	fmt.Println()
+	fmt.Println("	version           get the version number")
+	fmt.Println()
 	fmt.Println("The flags are:")
 	fmt.Println("	-beautify=false   disable beautifying responses")
 	fmt.Println("	-beautify=true    enable beautifying responses (default)")

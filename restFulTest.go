@@ -10,12 +10,16 @@ import (
 	"os"
 	"strings"
 	"time"
+	"runtime"
 )
 
 var fatal string = "Error: "
 
+var version string = "1.0.0"
+
 // todo: add gui
 // todo: option to save response in file
+// todo: add version command
 
 func main() {
 	red := color.New(color.FgRed)
@@ -75,6 +79,18 @@ func main() {
 			} else {
 				sendHelp()
 			}
+
+		case "version":
+			build, err := Asset("build.txt")
+
+			if err != nil {
+				build = []byte("-dev")
+			}
+
+			fmt.Println("RESTfulTest "+version+strings.Replace(string(build), "\n", "", -1)+
+				" (Go runtime "+runtime.Version()+")")
+
+			fmt.Println("Copyright (c) 2016, michael1011")
 
 		case "help":
 			sendInstructions()

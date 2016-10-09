@@ -4,6 +4,7 @@
 *.so
 
 RESTfulTest
+go-bindata
 
 # Folders
 _obj
