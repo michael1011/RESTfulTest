@@ -1,10 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
+	"fmt"
 )
+
+var fatal string = "Error: "
 
 func main() {
 	args := os.Args[1:]
@@ -15,12 +18,33 @@ func main() {
 		switch strings.ToLower(args[0]) {
 		case "get":
 			if argsLen == 2 {
-				fmt.Println("test")
+				response, err := getRequest(args[1])
+
+				if err == nil {
+					defer response.Body.Close()
+
+					readResp, readErr := ioutil.ReadAll(response.Body)
+
+					if readErr != nil {
+						fmt.Print(fatal)
+						fmt.Println(readErr)
+					}
+
+					fmt.Println("Status: "+response.Status)
+					fmt.Println()
+					fmt.Println(string(readResp))
+
+				} else {
+					fmt.Print(fatal)
+					fmt.Println(err)
+				}
 
 			} else {
 				sendHelp()
 			}
 
+		default:
+			sendHelp()
 		}
 
 	} else {
