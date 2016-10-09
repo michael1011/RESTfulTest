@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"flag"
 )
 
 var fatal string = "Error: "
@@ -14,6 +15,10 @@ var fatal string = "Error: "
 func main() {
 	args := os.Args[1:]
 
+	if(strings.HasPrefix(os.Args[1], "-")) {
+		args = os.Args[2:]
+	}
+
 	argsLen := len(args)
 
 	if argsLen > 0 {
@@ -21,7 +26,7 @@ func main() {
 		// fixme: add post request
 
 		case "get":
-			if argsLen == 2 {
+			if argsLen > 1 {
 				response, err := getRequest(args[1])
 
 				if err == nil {
@@ -38,17 +43,25 @@ func main() {
 
 					readResp := string(rawResp)
 
+
+					beautify := flag.Bool("beautify", true, "disable beautifying json")
+
+					flag.Parse()
+
 					// fixme: add xml beautifier
 
-					// fixme: add option to disable parsing
+					if *beautify {
+						if isJson(readResp) {
+							jsonRead, jsonErr := prettyJson(readResp)
 
-					if isJson(readResp) {
-						jsonRead, jsonErr := prettyJson(readResp)
+							if jsonErr == nil {
+								fmt.Println(jsonRead)
+							} else {
+								sendError(jsonErr)
+							}
 
-						if jsonErr == nil {
-							fmt.Println(jsonRead)
 						} else {
-							sendError(jsonErr)
+							fmt.Println(readResp)
 						}
 
 					} else {
