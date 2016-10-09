@@ -5,6 +5,7 @@ go:
 
 install:
   - go get github.com/yosssi/gohtml
+  - go get github.com/fatih/color
 
 script:
   - go build

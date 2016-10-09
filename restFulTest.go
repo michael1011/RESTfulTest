@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"net/http"
@@ -17,6 +18,8 @@ var fatal string = "Error: "
 // todo: option to save response in file
 
 func main() {
+	red := color.New(color.FgRed)
+
 	args := os.Args[1:]
 
 	argsLen := len(args)
@@ -59,7 +62,7 @@ func main() {
 						}
 
 					default:
-						fmt.Println(fatal+"Unknown argument: " + value)
+						red.Println(fatal + "Unknown argument: " + value)
 						os.Exit(1)
 					}
 
@@ -131,8 +134,10 @@ func sendResponse(response *http.Response, err error, startTime time.Time) {
 }
 
 func sendError(error error) {
-	fmt.Print(fatal)
-	fmt.Println(error)
+	red := color.New(color.FgRed)
+
+	red.Print(fatal)
+	red.Println(error)
 }
 
 func sendHelp() {
