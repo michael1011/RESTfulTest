@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
-	"fmt"
 )
 
 var fatal string = "Error: "
+
+// todo: add gui
 
 func main() {
 	args := os.Args[1:]
@@ -16,6 +18,8 @@ func main() {
 
 	if argsLen > 0 {
 		switch strings.ToLower(args[0]) {
+		// fixme: add post request
+
 		case "get":
 			if argsLen == 2 {
 				response, err := getRequest(args[1])
@@ -29,10 +33,14 @@ func main() {
 						sendError(readErr)
 					}
 
-					fmt.Println("Status: "+response.Status)
+					fmt.Println("Status: " + response.Status)
 					fmt.Println()
 
 					readResp := string(rawResp)
+
+					// fixme: add xml beautifier
+
+					// fixme: add option to disable parsing
 
 					if isJson(readResp) {
 						jsonRead, jsonErr := prettyJson(readResp)
@@ -54,6 +62,9 @@ func main() {
 			} else {
 				sendHelp()
 			}
+
+		case "help":
+			sendInstructions()
 
 		default:
 			sendHelp()

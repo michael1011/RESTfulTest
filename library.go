@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"strings"
-	"encoding/json"
-	"bytes"
 )
 
 func getRequest(url string) (*http.Response, error) {
@@ -17,15 +17,14 @@ func getRequest(url string) (*http.Response, error) {
 	return response, err
 }
 
-
-func isJson(str string) (bool) {
+func isJson(input string) bool {
 	var js json.RawMessage
-	return json.Unmarshal([]byte(str), &js) == nil
+	return json.Unmarshal([]byte(input), &js) == nil
 }
 
-func prettyJson(in string) (string, error) {
+func prettyJson(input string) (string, error) {
 	var out bytes.Buffer
-	err := json.Indent(&out, []byte(in), "", "\t")
+	err := json.Indent(&out, []byte(input), "", "\t")
 
 	if err != nil {
 		return "", err
