@@ -1,11 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"os"
 	"strings"
-	"flag"
 )
 
 var fatal string = "Error: "
@@ -15,13 +16,13 @@ var fatal string = "Error: "
 func main() {
 	args := os.Args[1:]
 
-	if(strings.HasPrefix(os.Args[1], "-")) {
-		args = os.Args[2:]
-	}
-
 	argsLen := len(args)
 
 	if argsLen > 0 {
+		if strings.HasPrefix(os.Args[1], "-") {
+			args = os.Args[2:]
+		}
+
 		switch strings.ToLower(args[0]) {
 		// fixme: add post request
 
@@ -43,12 +44,9 @@ func main() {
 
 					readResp := string(rawResp)
 
-
-					beautify := flag.Bool("beautify", true, "disable beautifying json")
+					beautify := flag.Bool("beautify", true, "disable beautifying")
 
 					flag.Parse()
-
-					// fixme: add xml beautifier
 
 					if *beautify {
 						if isJson(readResp) {
@@ -61,7 +59,7 @@ func main() {
 							}
 
 						} else {
-							fmt.Println(readResp)
+							fmt.Println(gohtml.Format(readResp))
 						}
 
 					} else {
