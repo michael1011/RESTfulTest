@@ -1,16 +1,13 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/yosssi/gohtml"
-	"io/ioutil"
-	"net/http"
 	"os"
+	"runtime"
 	"strings"
 	"time"
-	"runtime"
+	"github.com/yosssi/gohtml"
 )
 
 var fatal string = "Error: "
@@ -19,7 +16,6 @@ var version string = "1.0.0"
 
 // todo: add gui
 // todo: option to save response in file
-// todo: add version command
 
 func main() {
 	red := color.New(color.FgRed)
@@ -40,7 +36,9 @@ func main() {
 
 				response, err := getRequest(args[1])
 
-				sendResponse(response, err, startTime)
+				parsed, json := parseResponse(response, err, startTime)
+
+				printParsed(parsed, json)
 
 			} else {
 				sendHelp()
@@ -74,11 +72,16 @@ func main() {
 
 				response, err := postRequest(args[1], body, headers)
 
-				sendResponse(response, err, startTime)
+				parsed, json := parseResponse(response, err, startTime)
+
+				printParsed(parsed, json)
 
 			} else {
 				sendHelp()
 			}
+
+		case "gui":
+			openGui()
 
 		case "version":
 			build, err := Asset("build.txt")
@@ -87,8 +90,8 @@ func main() {
 				build = []byte("-dev")
 			}
 
-			fmt.Println("RESTfulTest "+version+strings.Replace(string(build), "\n", "", -1)+
-				" (Go runtime "+runtime.Version()+")")
+			fmt.Println("RESTfulTest " + version + strings.Replace(string(build), "\n", "", -1) +
+				" (Go runtime " + runtime.Version() + ")")
 
 			fmt.Println("Copyright (c) 2016, michael1011")
 
@@ -105,47 +108,18 @@ func main() {
 
 }
 
-func sendResponse(response *http.Response, err error, startTime time.Time) {
-	if err == nil {
-		defer response.Body.Close()
+func printParsed(parsed [5]string, json bool) {
+	fmt.Println(parsed[0])
+	fmt.Println(parsed[1])
+	fmt.Println(parsed[2])
+	fmt.Println(parsed[3])
 
-		rawResp, readErr := ioutil.ReadAll(response.Body)
-
-		if readErr != nil {
-			sendError(readErr)
-		}
-
-		fmt.Println("Status: " + response.Status)
-		fmt.Println("Time: ", time.Since(startTime))
-		fmt.Println("Headers: ", response.Header)
-		fmt.Println()
-
-		readResp := string(rawResp)
-
-		beautify := flag.Bool("beautify", true, "disable beautifying")
-
-		flag.Parse()
-
-		if *beautify {
-			if isJson(readResp) {
-				jsonRead, jsonErr := prettyJson(readResp)
-
-				if jsonErr == nil {
-					fmt.Println(jsonRead)
-				} else {
-					sendError(jsonErr)
-				}
-
-			} else {
-				fmt.Println(gohtml.Format(readResp))
-			}
-
-		} else {
-			fmt.Println(readResp)
-		}
+	if json {
+		// fixme: remove <nil> at the end
+		fmt.Println(prettyJson(parsed[4]))
 
 	} else {
-		sendError(err)
+		fmt.Println(gohtml.Format(parsed[4]))
 	}
 }
 
