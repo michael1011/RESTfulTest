@@ -1,2 +1,2 @@
-# RESTfulTest [![Build Status](https://michael1011.at/jenkins/buildStatus/icon?job=RESTfulTest)](https://michael1011.at/jenkins/job/RESTfulTest/)
+# RESTfulTest [![Jenkins](https://michael1011.at/jenkins/buildStatus/icon?job=RESTfulTest)](https://michael1011.at/jenkins/job/RESTfulTest/) [![Travis](https://travis-ci.org/michael1011/RESTfulTest.svg?branch=master)](https://travis-ci.org/michael1011/RESTfulTest)
 An application to test RESTful services
