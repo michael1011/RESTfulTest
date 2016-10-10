@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/yosssi/gohtml"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -14,7 +15,6 @@ var fatal string = "Error: "
 
 var version string = "1.0.0"
 
-// todo: add gui
 // todo: option to save response in file
 
 func main() {
@@ -36,9 +36,14 @@ func main() {
 
 				response, err := getRequest(args[1])
 
-				parsed, json := parseResponse(response, err, startTime)
+				if err == nil {
+					output, response, beautify := parseResponse(response)
 
-				printParsed(parsed, json)
+					printParsed(output, response, beautify, startTime)
+
+				} else {
+					sendError(err)
+				}
 
 			} else {
 				sendHelp()
@@ -72,9 +77,14 @@ func main() {
 
 				response, err := postRequest(args[1], body, headers)
 
-				parsed, json := parseResponse(response, err, startTime)
+				if err == nil {
+					output, response, beautify := parseResponse(response)
 
-				printParsed(parsed, json)
+					printParsed(output, response, beautify, startTime)
+
+				} else {
+					sendError(err)
+				}
 
 			} else {
 				sendHelp()
@@ -108,18 +118,22 @@ func main() {
 
 }
 
-func printParsed(parsed [5]string, json bool) {
-	fmt.Println(parsed[0])
-	fmt.Println(parsed[1])
-	fmt.Println(parsed[2])
-	fmt.Println(parsed[3])
+func printParsed(output string, response *http.Response, beautify *bool, startTime time.Time) {
+	fmt.Println(outputTemplate[0], response.Status)
+	fmt.Println(outputTemplate[1], time.Since(startTime))
+	fmt.Println(outputTemplate[2], response.Header)
+	fmt.Println(outputTemplate[3])
 
-	if json {
-		// fixme: remove <nil> at the end
-		fmt.Println(prettyJson(parsed[4]))
+	if *beautify {
+		if isJson(output) {
+			fmt.Println(prettyJson(output))
+
+		} else {
+			fmt.Println(gohtml.Format(output))
+		}
 
 	} else {
-		fmt.Println(gohtml.Format(parsed[4]))
+		fmt.Println(output)
 	}
 }
 
