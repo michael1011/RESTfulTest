@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/fatih/color"
+	"github.com/yosssi/gohtml"
 	"os"
 	"runtime"
 	"strings"
 	"time"
-	"github.com/yosssi/gohtml"
 )
 
 var fatal string = "Error: "

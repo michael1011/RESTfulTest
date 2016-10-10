@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
-	"flag"
-	"io/ioutil"
 )
 
 func getRequest(url string) (*http.Response, error) {
@@ -41,8 +41,8 @@ func parseResponse(response *http.Response, err error, startTime time.Time) (out
 		output[0] = "Status: " + response.Status
 
 		// fixme: fix headers and time
-		output[1] = "Time: "//string(time.Since(startTime))
-		output[2] = "Headers: "//+string(response.Header)
+		output[1] = "Time: "    //string(time.Since(startTime))
+		output[2] = "Headers: " //+string(response.Header)
 		output[3] = ""
 
 		readResp := string(rawResp)
