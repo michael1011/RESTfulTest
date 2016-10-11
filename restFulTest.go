@@ -15,7 +15,7 @@ var fatal string = "Error: "
 
 var version string = "1.0.0"
 
-// fixme: setup ci
+// fixme: ci build bindata-assetfs
 // todo: option to save response in file
 
 func main() {

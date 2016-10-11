@@ -1,0 +1,25 @@
+.mdl-textfield__input,
+.mdl-textfield__label,
+.mdl-textfield {
+    width: 100% !important;
+}
+
+.container {
+    margin-top: 10rem;
+}
+
+.space {
+    margin-top: 2rem;
+}
+
+.center {
+    text-align: center;
+}
+
+body {
+    min-height: 0 !important;
+
+    margin: 0 auto !important;
+    max-width: 50em !important;
+}
+

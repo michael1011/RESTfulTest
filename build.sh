@@ -1,5 +1,16 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-go-bindata-assetfs public
+deleteFile() {
+    if [ -f "$1" ];
+    then
+       rm -f $1
+    fi
+
+}
+
+deleteFile bindata_assetfs.go
+deleteFile RESTfulTest
+
+go-bindata-assetfs public/ public/css
 
 go build
