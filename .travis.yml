@@ -6,9 +6,6 @@ go:
 install:
   - go get github.com/yosssi/gohtml
   - go get github.com/fatih/color
-  - go get github.com/jteeuwen/go-bindata
-  - go get github.com/elazarl/go-bindata-assetfs
 
 script:
-  - go-bindata-assetfs
   - go build
