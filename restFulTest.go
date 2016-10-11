@@ -15,6 +15,7 @@ var fatal string = "Error: "
 
 var version string = "1.0.0"
 
+// fixme: setup ci
 // todo: option to save response in file
 
 func main() {
@@ -94,15 +95,8 @@ func main() {
 			openGui()
 
 		case "version":
-			build, err := Asset("build.txt")
-
-			if err != nil {
-				build = []byte("-dev")
-			}
-
-			fmt.Println("RESTfulTest " + version + strings.Replace(string(build), "\n", "", -1) +
-				" (Go runtime " + runtime.Version() + ")")
-
+			// todo: add build number
+			fmt.Println("RESTfulTest " + version+"(Go runtime " + runtime.Version() + ")")
 			fmt.Println("Copyright (c) 2016, michael1011")
 
 		case "help":
