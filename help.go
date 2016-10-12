@@ -14,7 +14,7 @@ func sendInstructions() {
 	fmt.Println("The commands are:")
 	fmt.Println("	get <url>         send a get request to <url>")
 	fmt.Println()
-	fmt.Println("	post <url> body=\"...\" header=\"key:value;key:value;...\"")
+	fmt.Println("	post <url> body=\"...\" header=\"key:value::key:value::...\"")
 	fmt.Println("			  send a post request to <url>")
 	fmt.Println()
 	fmt.Println("	version           get the version number")

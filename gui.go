@@ -6,6 +6,7 @@ import (
 	"github.com/yosssi/gohtml"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -34,19 +35,32 @@ func request(writer http.ResponseWriter, response *http.Request) {
 
 	url := response.URL.Query().Get("url")
 	body := response.URL.Query().Get("body")
-	header := response.URL.Query().Get("header")
+	rawHeaders := response.URL.Query().Get("headers")
 
 	if url == "" {
 		writer.Write([]byte("You have to set an url"))
 
 	} else {
-		if body == "" && header == "" {
+		headersLen := len(rawHeaders)
+
+		if len(body) == 0 && headersLen == 0 {
 			resp, err := getRequest(url)
 
 			writeResponse(resp, err, startTime, writer)
-
 		} else {
-			// fixme: add post requests
+			headers := make(map[string]string)
+
+			if headersLen > 0 {
+				for _, value := range strings.Split(rawHeaders, "::") {
+					entry := strings.Split(value, ":")
+
+					headers[entry[0]] = entry[1]
+				}
+			}
+
+			resp, err := postRequest(url, body, headers)
+
+			writeResponse(resp, err, startTime, writer)
 		}
 	}
 

@@ -68,7 +68,7 @@ func main() {
 						body = body + value[5:]
 
 					case strings.HasPrefix(value, "header="):
-						for _, value = range strings.Split(value[5:], ";") {
+						for _, value = range strings.Split(value[5:], "::") {
 							entry := strings.Split(value, ":")
 
 							headers[entry[0]] = entry[1]
