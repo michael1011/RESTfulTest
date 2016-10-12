@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/yosssi/gohtml"
@@ -9,7 +10,6 @@ import (
 	"runtime"
 	"strings"
 	"time"
-	"flag"
 )
 
 var fatal string = "Error: "
@@ -101,11 +101,11 @@ func main() {
 			}
 
 		case "gui":
-			openGui()
+			startGui()
 
 		case "version":
 			// todo: add build number
-			fmt.Println("RESTfulTest " + version+" (Go runtime " + runtime.Version() + ")")
+			fmt.Println("RESTfulTest " + version + " (Go runtime " + runtime.Version() + ")")
 			fmt.Println("Copyright (c) 2016, michael1011")
 
 		case "help":
