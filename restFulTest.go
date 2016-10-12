@@ -10,6 +10,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+	"strconv"
+	"bufio"
 )
 
 var fatal string = "Error: "
@@ -17,7 +19,6 @@ var fatal string = "Error: "
 var version string = "1.0.0"
 
 // fixme: ci build bindata-assetfs
-// todo: option to save response in file
 
 func main() {
 	red := color.New(color.FgRed)
@@ -27,8 +28,8 @@ func main() {
 	argsLen := len(args)
 
 	if argsLen > 0 {
-		if strings.HasPrefix(os.Args[1], "-") {
-			args = os.Args[2:]
+		for i := 1; strings.HasPrefix(os.Args[i], "-"); i++ {
+			args = os.Args[i+1:]
 		}
 
 		switch strings.ToLower(args[0]) {
@@ -41,11 +42,7 @@ func main() {
 				if err == nil {
 					output, response := parseResponse(response)
 
-					beautify := flag.Bool("beautify", true, "disable beautifying")
-
-					flag.Parse()
-
-					printParsed(output, response, beautify, startTime)
+					printParsed(output, response, startTime)
 
 				} else {
 					sendError(err)
@@ -57,8 +54,6 @@ func main() {
 
 		case "post":
 			if argsLen > 2 {
-				startTime := time.Now()
-
 				body := ""
 				headers := make(map[string]string)
 
@@ -81,16 +76,16 @@ func main() {
 
 				}
 
+				startTime := time.Now()
+
 				response, err := postRequest(args[1], body, headers)
 
 				if err == nil {
 					output, response := parseResponse(response)
 
-					beautify := flag.Bool("beautify", true, "disable beautifying")
-
 					flag.Parse()
 
-					printParsed(output, response, beautify, startTime)
+					printParsed(output, response, startTime)
 
 				} else {
 					sendError(err)
@@ -101,7 +96,10 @@ func main() {
 			}
 
 		case "gui":
-			startGui()
+			rawPort := flag.Int("port", 8000, "change to port of the gui")
+			flag.Parse()
+
+			startGui(strconv.Itoa(*rawPort))
 
 		case "version":
 			// todo: add build number
@@ -121,11 +119,24 @@ func main() {
 
 }
 
-func printParsed(output string, response *http.Response, beautify *bool, startTime time.Time) {
+func printParsed(output string, response *http.Response, startTime time.Time) {
+	save := flag.String("save", "", "to save the output to a file")
+	beautify := flag.Bool("beautify", true, "disable beautifying")
+
+	flag.Parse()
+
+	timeString := time.Since(startTime).String()
+
+	if *save != "" {
+		saveFile(*save, response, output, timeString, *beautify)
+	}
+
 	fmt.Println(outputTemplate[0], response.Status)
-	fmt.Println(outputTemplate[1], time.Since(startTime))
+	fmt.Println(outputTemplate[1], timeString)
+	fmt.Println()
 	fmt.Println(outputTemplate[2], response.Header)
-	fmt.Println(outputTemplate[3])
+	fmt.Println()
+	fmt.Println()
 
 	if *beautify {
 		if isJson(output) {
@@ -138,6 +149,34 @@ func printParsed(output string, response *http.Response, beautify *bool, startTi
 	} else {
 		fmt.Println(output)
 	}
+
+}
+
+func saveFile(save string, response *http.Response, output string, time string, beautify bool) {
+	f, _ := os.Create(save)
+
+	writer := bufio.NewWriter(f)
+
+	writer.WriteString(outputTemplate[0]+response.Status+"\n")
+	writer.WriteString(outputTemplate[1] + time+"\n\n")
+
+	writer.WriteString(outputTemplate[2]+"\n")
+	response.Header.Write(writer)
+	writer.WriteString("\n\n")
+
+	if beautify {
+		if isJson(output) {
+			writer.WriteString(prettyJson(output))
+
+		} else {
+			writer.WriteString(gohtml.Format(output))
+		}
+
+	} else {
+		writer.WriteString(output)
+	}
+
+	writer.Flush()
 }
 
 func sendError(error error) {

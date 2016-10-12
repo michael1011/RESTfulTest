@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var outputTemplate []string = []string{"Status: ", "Time: ", "Headers: ", ""}
+var outputTemplate []string = []string{"Status: ", "Time: ", "Headers: "}
 
 func getRequest(url string) (*http.Response, error) {
 	request, err := http.Get(completeUrl(url))

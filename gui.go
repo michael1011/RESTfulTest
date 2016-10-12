@@ -1,21 +1,14 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/yosssi/gohtml"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
 
-func startGui() {
-	rawPort := flag.Int("port", 8000, "change to port of the gui")
-	flag.Parse()
-
-	port := strconv.Itoa(*rawPort)
-
+func startGui(port string) {
 	fmt.Println("Open 'localhost:" + port + "' in your browser to see the interface")
 	fmt.Println("'Ctrl + C' to stop the server")
 
@@ -31,8 +24,6 @@ func startGui() {
 }
 
 func request(writer http.ResponseWriter, response *http.Request) {
-	startTime := time.Now()
-
 	url := response.URL.Query().Get("url")
 	body := response.URL.Query().Get("body")
 	rawHeaders := response.URL.Query().Get("headers")
@@ -41,6 +32,8 @@ func request(writer http.ResponseWriter, response *http.Request) {
 		writer.Write([]byte("You have to set an url"))
 
 	} else {
+		startTime := time.Now()
+
 		headersLen := len(rawHeaders)
 
 		if len(body) == 0 && headersLen == 0 {
@@ -66,9 +59,9 @@ func request(writer http.ResponseWriter, response *http.Request) {
 
 }
 
-func writeResponse(resp *http.Response, err error, startTime time.Time, writer http.ResponseWriter) {
+func writeResponse(response *http.Response, err error, startTime time.Time, writer http.ResponseWriter) {
 	if err == nil {
-		out, resp := parseResponse(resp)
+		out, resp := parseResponse(response)
 
 		writer.Write([]byte(outputTemplate[0] + resp.Status + "\n"))
 
@@ -89,4 +82,5 @@ func writeResponse(resp *http.Response, err error, startTime time.Time, writer h
 	} else {
 		writer.Write([]byte(err.Error()))
 	}
+
 }

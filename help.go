@@ -27,4 +27,6 @@ func sendInstructions() {
 	fmt.Println()
 	fmt.Println("	-port=<port>      set the port of the gui (default: 8000)")
 	fmt.Println()
+	fmt.Println("	-save=<file>      save the response to <file>")
+	fmt.Println()
 }
