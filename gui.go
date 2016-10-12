@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/yosssi/gohtml"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func startGui() {
@@ -28,6 +30,8 @@ func startGui() {
 }
 
 func request(writer http.ResponseWriter, response *http.Request) {
+	startTime := time.Now()
+
 	url := response.URL.Query().Get("url")
 	body := response.URL.Query().Get("body")
 	header := response.URL.Query().Get("header")
@@ -39,18 +43,36 @@ func request(writer http.ResponseWriter, response *http.Request) {
 		if body == "" && header == "" {
 			resp, err := getRequest(url)
 
-			if err == nil {
-				// todo: send time, status code, ...
-				out, _ := parseResponse(resp)
+			writeResponse(resp, err, startTime, writer)
 
-				writer.Write([]byte(out))
-
-			} else {
-				writer.Write([]byte(err.Error()))
-			}
 		} else {
 			// fixme: add post requests
 		}
 	}
 
+}
+
+func writeResponse(resp *http.Response, err error, startTime time.Time, writer http.ResponseWriter) {
+	if err == nil {
+		out, resp := parseResponse(resp)
+
+		writer.Write([]byte(outputTemplate[0] + resp.Status + "\n"))
+
+		writer.Write([]byte(outputTemplate[1] + time.Since(startTime).String() + "\n\n"))
+
+		writer.Write([]byte(outputTemplate[2] + "\n"))
+		resp.Header.Write(writer)
+		writer.Write([]byte("\n\n"))
+
+		if isJson(out) {
+			out = prettyJson(out)
+		} else {
+			out = gohtml.Format(out)
+		}
+
+		writer.Write([]byte(out))
+
+	} else {
+		writer.Write([]byte(err.Error()))
+	}
 }

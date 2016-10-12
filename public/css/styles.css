@@ -4,21 +4,37 @@
     width: 100% !important;
 }
 
+.mdl-spinner {
+    width: 50%;
+    margin: 0 auto;
+
+    display: block !important;
+
+    visibility: hidden;
+}
+
 .container {
-    margin-top: 10rem;
+    margin-top: 5em;
 }
 
 .space {
-    margin-top: 2rem;
+    margin-top: 3rem;
 }
 
 .center {
     text-align: center;
 }
 
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
 body {
+    max-width: 60em !important;
     min-height: 0 !important;
 
     margin: 0 auto !important;
-    max-width: 50em !important;
+
+    padding: 5em;
 }
