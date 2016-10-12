@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 
+<!-- fixme: soft wraps -->
+
+<!-- todo: syntax highlighting -->
+<!-- todo: send on enter click http://stackoverflow.com/questions/16011312/execute-function-on-enter-key -->
+
 <html>
 
 <head>
@@ -10,14 +15,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.orange-blue.min.css" />
 
+    <script src="js/script.js"></script>
     <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <form action="#">
+        <form>
             <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="url" id="url">
+                <input class="mdl-textfield__input" type="text" id="url">
                 <label class="mdl-textfield__label" for="url">URL</label>
             </div>
 
@@ -32,15 +38,21 @@
                     <label class="mdl-textfield__label" for="header">Header</label>
                 </div>
             </div>
-
-            <div class="space">
-                <div class="center">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                        Send
-                    </button>
-                </div>
-            </div>
         </form>
+
+        <div class="space center">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="button" onclick="send()">
+                Send
+            </button>
+        </div>
+
+        <div class="space">
+            <pre>
+                <!--suppress HtmlUnknownTag -->
+                <xmp id="response"></xmp>
+            </pre>
+        </div>
+
     </div>
 </body>
 

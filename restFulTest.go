@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strings"
 	"time"
+	"flag"
 )
 
 var fatal string = "Error: "
@@ -38,7 +39,11 @@ func main() {
 				response, err := getRequest(args[1])
 
 				if err == nil {
-					output, response, beautify := parseResponse(response)
+					output, response := parseResponse(response)
+
+					beautify := flag.Bool("beautify", true, "disable beautifying")
+
+					flag.Parse()
 
 					printParsed(output, response, beautify, startTime)
 
@@ -79,7 +84,11 @@ func main() {
 				response, err := postRequest(args[1], body, headers)
 
 				if err == nil {
-					output, response, beautify := parseResponse(response)
+					output, response := parseResponse(response)
+
+					beautify := flag.Bool("beautify", true, "disable beautifying")
+
+					flag.Parse()
 
 					printParsed(output, response, beautify, startTime)
 
@@ -96,7 +105,7 @@ func main() {
 
 		case "version":
 			// todo: add build number
-			fmt.Println("RESTfulTest " + version+"(Go runtime " + runtime.Version() + ")")
+			fmt.Println("RESTfulTest " + version+" (Go runtime " + runtime.Version() + ")")
 			fmt.Println("Copyright (c) 2016, michael1011")
 
 		case "help":

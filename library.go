@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -37,7 +36,7 @@ func completeUrl(url string) string {
 	return url
 }
 
-func parseResponse(response *http.Response) (string, *http.Response, *bool) {
+func parseResponse(response *http.Response) (string, *http.Response) {
 	defer response.Body.Close()
 
 	rawResp, readErr := ioutil.ReadAll(response.Body)
@@ -48,11 +47,7 @@ func parseResponse(response *http.Response) (string, *http.Response, *bool) {
 
 	readResp := string(rawResp)
 
-	beautify := flag.Bool("beautify", true, "disable beautifying")
-
-	flag.Parse()
-
-	return readResp, response, beautify
+	return readResp, response
 }
 
 func isJson(input string) bool {
