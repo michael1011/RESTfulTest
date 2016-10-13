@@ -5,16 +5,14 @@ sudo: false
 go:
   - 1.7.1
 
-env:
-  - "PATH=/home/travis/gopath/bin:$PATH"
-
 install:
   - go get github.com/yosssi/gohtml
   - go get github.com/fatih/color
   - go get github.com/jteeuwen/go-bindata
   - go get github.com/elazarl/go-bindata-assetfs
-
-script:
   - echo travis-$TRAVIS_BUILD_NUMBER > build.txt
   - go-bindata-assetfs build.txt public/ public/css public/js
+  - ls $GOPATH/bin
+
+script:
   - go build
