@@ -11,8 +11,8 @@ install:
   - go get github.com/jteeuwen/go-bindata
   - go get github.com/elazarl/go-bindata-assetfs
   - echo travis-$TRAVIS_BUILD_NUMBER > build.txt
-  - go-bindata-assetfs build.txt public/ public/css public/js
   - ls $GOPATH/bin
 
 script:
+  - go-bindata-assetfs build.txt public/ public/css public/js
   - go build
