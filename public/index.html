@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-<!-- todo: syntax highlighting -->
-
 <html>
 
 <head>
@@ -11,9 +9,13 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.orange-blue.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
 
     <script src="js/script.js"></script>
+
     <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
 </head>
 
 <body onload="registerListeners()">
@@ -44,7 +46,7 @@
         </div>
 
         <div class="space">
-            <pre id="response"></pre>
+            <pre><code id="response"></code></pre>
             <div class="mdl-spinner mdl-js-spinner is-active" id="loading"></div>
         </div>
 

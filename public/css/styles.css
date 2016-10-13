@@ -13,6 +13,11 @@
     visibility: hidden;
 }
 
+.hljs {
+    background: none !important;
+}
+
+
 .container {
     margin-top: 5em;
 }

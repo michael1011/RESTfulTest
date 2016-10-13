@@ -12,11 +12,11 @@ function registerListener(element) {
     });
 }
 
-var loading = false;
+var finished = false;
 
 function send() {
-    if (!loading) {
-        loading = true;
+    if (!finished) {
+        finished = true;
 
         var loading = document.getElementById("loading");
         var resp = document.getElementById("response");
@@ -33,7 +33,11 @@ function send() {
             loading.style.visibility = 'hidden';
             resp.innerText = req.responseText;
 
-            loading = false;
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            finished = false;
         });
 
         req.send();
