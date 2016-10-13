@@ -11,6 +11,6 @@ deleteFile() {
 deleteFile bindata_assetfs.go
 deleteFile RESTfulTest
 
-go-bindata-assetfs public/ public/css public/js
+go-bindata-assetfs build.txt public/ public/css public/js
 
 go build

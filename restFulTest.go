@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"github.com/fatih/color"
@@ -8,10 +9,9 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
-	"bufio"
 )
 
 var fatal string = "Error: "
@@ -102,8 +102,11 @@ func main() {
 			startGui(strconv.Itoa(*rawPort))
 
 		case "version":
-			// todo: add build number
-			fmt.Println("RESTfulTest " + version + " (Go runtime " + runtime.Version() + ")")
+			build, _ := Asset("build.txt")
+
+			fmt.Println("RESTfulTest " + version + "-" + strings.Replace(string(build[:]), "\n", "", -1) +
+				" (Go runtime " + runtime.Version() + ")")
+
 			fmt.Println("Copyright (c) 2016, michael1011")
 
 		case "help":
@@ -157,10 +160,10 @@ func saveFile(save string, response *http.Response, output string, time string, 
 
 	writer := bufio.NewWriter(f)
 
-	writer.WriteString(outputTemplate[0]+response.Status+"\n")
-	writer.WriteString(outputTemplate[1] + time+"\n\n")
+	writer.WriteString(outputTemplate[0] + response.Status + "\n")
+	writer.WriteString(outputTemplate[1] + time + "\n\n")
 
-	writer.WriteString(outputTemplate[2]+"\n")
+	writer.WriteString(outputTemplate[2] + "\n")
 	response.Header.Write(writer)
 	writer.WriteString("\n\n")
 
