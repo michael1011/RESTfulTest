@@ -18,8 +18,6 @@ var fatal string = "Error: "
 
 var version string = "1.0.0"
 
-// fixme: ci build bindata-assetfs
-
 func main() {
 	red := color.New(color.FgRed)
 
