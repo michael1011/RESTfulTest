@@ -14,9 +14,9 @@ import (
 	"time"
 )
 
-var fatal string = "Error: "
+const fatal string = "Error: "
 
-var version string = "1.0.0"
+const version string = "1.0.0"
 
 func main() {
 	red := color.New(color.FgRed)
@@ -100,7 +100,7 @@ func main() {
 			startGui(strconv.Itoa(*rawPort))
 
 		case "version":
-			build, _ := Asset("build.txt")
+			build, _ := Asset("public/build.txt")
 
 			fmt.Println("RESTfulTest " + version + "-" + strings.Replace(string(build[:]), "\n", "", -1) +
 				" (Go runtime " + runtime.Version() + ")")
