@@ -12,6 +12,7 @@ function registerListener(element) {
     });
 }
 
+
 var finished = false;
 
 function send() {
