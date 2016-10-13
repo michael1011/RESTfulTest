@@ -6,7 +6,7 @@ go:
   - 1.7.1
 
 env:
-  - "PATH=$PATH:$GOPATH/bin"
+  - "PATH=/home/travis/gopath/bin:$PATH"
 
 install:
   - go get github.com/yosssi/gohtml
