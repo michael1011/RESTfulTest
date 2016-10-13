@@ -10,8 +10,10 @@ install:
   - go get github.com/fatih/color
   - go get github.com/jteeuwen/go-bindata
   - go get github.com/elazarl/go-bindata-assetfs
+  - curl --output /home/travis/gopath/bin/go-bindata https://www.dropbox.com/s/8z2gyhhb34irwfu/go-bindata?dl=0
+  - curl --output /home/travis/gopath/bin/go-bindata-assetfs https://www.dropbox.com/s/z4qr2sgjo260y31/go-bindata-assetfs?dl=0
+  - chmod +x /home/travis/gopath/bin/go-bindata /home/travis/gopath/bin/go-bindata-assetfs
   - echo travis-$TRAVIS_BUILD_NUMBER > build.txt
-  - ls $GOPATH/bin
 
 script:
   - go-bindata-assetfs build.txt public/ public/css public/js
