@@ -3,10 +3,12 @@ language: go
 sudo: false
 
 go:
-  - tip
+  - 1.7.1
+
+env:
+  - "PATH=$PATH:$GOPATH/bin"
 
 install:
-  - export PATH=$PATH:$GOPATH/bin
   - go get github.com/yosssi/gohtml
   - go get github.com/fatih/color
   - go get github.com/jteeuwen/go-bindata
