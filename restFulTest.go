@@ -135,7 +135,13 @@ func printParsed(output string, response *http.Response, startTime time.Time) {
 	fmt.Println(outputTemplate[0], response.Status)
 	fmt.Println(outputTemplate[1], timeString)
 	fmt.Println()
-	fmt.Println(outputTemplate[2], response.Header)
+	fmt.Println(outputTemplate[2])
+
+	for key, value := range response.Header {
+		fmt.Print(key + ": ")
+		fmt.Println(value)
+	}
+
 	fmt.Println()
 	fmt.Println()
 
